@@ -10,10 +10,6 @@
     
     <style>
         /* --- General Styling --- */
-        :root {
-            --animation-duration: 450s; /* Controls speed of lyrics */
-        }
-        
         body {
             margin: 0;
             font-family: 'Quicksand', sans-serif;
@@ -24,10 +20,8 @@
         /* --- Garden Background --- */
         .background-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: -2;
             background-image: url('https://images.unsplash.com/photo-1497211419994-14ae40a31753?auto=format&fit=crop&q=80&w=1887');
             background-size: cover;
@@ -36,48 +30,55 @@
             transform: scale(1.1);
         }
         
-        /* --- Marquee Lyrics in Background --- */
+        /* --- Fading Lyrics Styling --- */
         #lyrics-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 100px; /* Area for one line to appear */
             z-index: -1;
-            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             pointer-events: none;
             user-select: none;
         }
 
-        .lyrics-marquee {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: #000;
-            opacity: 0.06;
-            white-space: nowrap;
+        .lyric-line {
             position: absolute;
-            animation: marquee var(--animation-duration) linear infinite;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #000;
+            opacity: 0; /* Start invisible */
+            text-align: center;
+            animation: fadeInOutLyric 48s linear infinite; /* 8 lines * 6s per line */
         }
 
-        /* Position each line differently */
-        .lyrics-marquee.line1 { top: 10%; animation-delay: 0s; }
-        .lyrics-marquee.line2 { top: 25%; animation-delay: calc(var(--animation-duration) / -2); }
-        .lyrics-marquee.line3 { top: 40%; animation-delay: calc(var(--animation-duration) / -4); }
-        .lyrics-marquee.line4 { top: 60%; animation-delay: calc(var(--animation-duration) / -1.5); }
-        .lyrics-marquee.line5 { top: 80%; animation-delay: calc(var(--animation-duration) / -3); }
-
-        @keyframes marquee {
-            0% { transform: translateX(100vw); }
-            100% { transform: translateX(-100%); }
+        @keyframes fadeInOutLyric {
+            0%, 100% { opacity: 0; }
+            2% { opacity: 0.12; } /* Fade In */
+            10.5% { opacity: 0.12; } /* Hold */
+            12.5% { opacity: 0; } /* Fade Out (100% / 8 lines = 12.5% per line) */
         }
+        
+        /* Stagger the animation for each line */
+        .lyric-line:nth-child(1) { animation-delay: 0s; }
+        .lyric-line:nth-child(2) { animation-delay: 6s; }
+        .lyric-line:nth-child(3) { animation-delay: 12s; }
+        .lyric-line:nth-child(4) { animation-delay: 18s; }
+        .lyric-line:nth-child(5) { animation-delay: 24s; }
+        .lyric-line:nth-child(6) { animation-delay: 30s; }
+        .lyric-line:nth-child(7) { animation-delay: 36s; }
+        .lyric-line:nth-child(8) { animation-delay: 42s; }
+
 
         /* --- Splash Screen Styling --- */
         #splash-screen {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            width: 100vw;
+            height: 100vh; width: 100vw;
             background-color: rgba(244, 241, 247, 0.7);
             backdrop-filter: blur(5px);
         }
@@ -85,7 +86,6 @@
         #splash-screen h1 {
             font-family: 'Playfair Display', serif;
             font-size: 3rem;
-            font-weight: 500;
             color: #6a677a;
             opacity: 0;
             animation: fadeInOut 4s ease-in-out forwards;
@@ -102,17 +102,14 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            width: 100%;
+            height: 100vh; width: 100%;
             opacity: 0;
             animation: fadeIn 2s 4s forwards;
             background-color: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(2px);
         }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+        @keyframes fadeIn { to { opacity: 1; } }
 
         #main-greeting {
             font-family: 'Playfair Display', serif;
@@ -131,8 +128,7 @@
             align-items: flex-end;
             gap: 20px;
             flex-wrap: wrap;
-            width: 90%;
-            max-width: 1200px;
+            width: 90%; max-width: 1200px;
         }
 
         .flower-container {
@@ -143,12 +139,15 @@
         }
 
         .flower-container.bouncing {
-            animation: bounce 0.6s ease;
+            animation: happy-bounce 2s ease-in-out;
         }
         
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-30px); }
+        @keyframes happy-bounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            10%, 30%, 50%, 70% { transform: translateY(-30px) scale(1.1); }
+            20%, 40%, 60% { transform: translateY(0) scale(1); }
+            80% { transform: translateY(-15px) scale(1.05); }
+            90% { transform: translateY(0) scale(1); }
         }
 
         .flower-container:hover {
@@ -172,7 +171,7 @@
             50% { transform: translateY(-15px); }
         }
 
-        /* --- MODAL / LETTER STYLING --- */
+        /* --- MODAL / PAGE STYLING --- */
         .modal {
             display: none;
             position: fixed;
@@ -185,56 +184,42 @@
             align-items: center;
         }
 
-        .envelope {
+        .book {
+            width: 90vw;
+            max-width: 700px;
+            height: 70vh;
+            max-height: 500px;
             position: relative;
-            width: 80vw;
-            max-width: 600px;
-            height: 60vh;
-            max-height: 400px;
-            background-color: #f0e8d9;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1000px;
+            perspective: 1500px;
         }
 
-        .envelope-flap {
+        .book-page {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
-            height: 50%;
-            background-color: #e9decb;
-            border-bottom: 2px solid #dcd1b8;
-            border-radius: 10px 10px 0 0;
-            transform-origin: top;
-            transition: transform 0.7s ease-in-out;
-        }
-
-        .modal.open .envelope-flap {
-            transform: rotateX(180deg);
-        }
-
-        .letter {
-            position: absolute;
-            background-color: #fff;
-            width: 95%;
-            height: 95%;
-            border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1) inset;
-            overflow-y: auto;
+            height: 100%;
+            background-color: #fdfaf3;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 6px;
+            
+            /* Page Content */
             padding: 40px;
             box-sizing: border-box;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.5s 0.3s, transform 0.5s 0.3s;
+            overflow-y: auto;
         }
         
-        .modal.open .letter {
-            opacity: 1;
-            transform: translateY(0);
+        .book-cover {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #e9decb;
+            border-radius: 6px;
+            transform-origin: left;
+            transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1;
+        }
+
+        .modal.open .book-cover {
+            transform: rotateY(-180deg);
         }
 
         .close-button {
@@ -267,15 +252,16 @@
             font-size: 1rem;
             line-height: 1.8;
             color: #3e3a4e;
+            opacity: 0; /* Start hidden */
+            transition: opacity 0.5s 0.8s; /* Fade in after page turns */
         }
         
-        #letter-body.justified {
-            text-align: justify;
+        .modal.open #letter-body {
+            opacity: 1;
         }
 
-        #letter-body.centered {
-            text-align: center;
-        }
+        #letter-body.justified { text-align: justify; }
+        #letter-body.centered { text-align: center; }
 
     </style>
 </head>
@@ -284,15 +270,19 @@
     <!-- Background Elements -->
     <div class="background-container"></div>
     <div id="lyrics-container">
-        <p class="lyrics-marquee line1">Let's go in the garden, You'll find something waiting. Right there where you left it lying upside down. When you finally find it, you'll see how it's faded. The underside is lighter when you turn it around.</p>
-        <p class="lyrics-marquee line2">Everything stays right where you left it. Everything stays, but it still changes. Ever so slightly, daily and nightly. In little ways, when everything stays.</p>
-        <p class="lyrics-marquee line3">Go down to the ocean, The crystal tide is raising. Waters' gotten higher as the shore washes out. Keep your eyes wide open, even when the sun is blazin'. The moon controls the tide, it can cause you to drown.</p>
-        <p class="lyrics-marquee line4">Everything stays, right where you've left it. Everything stays, but it still changes. Ever so slightly, daily and nightly. In little ways. When everything stays.</p>
+        <p class="lyric-line">Let's go in the garden, You'll find something waiting</p>
+        <p class="lyric-line">Right there where you left it lying upside down</p>
+        <p class="lyric-line">When you finally find it, you'll see how it's faded</p>
+        <p class="lyric-line">The underside is lighter when you turn it around</p>
+        <p class="lyric-line">Everything stays right where you left it</p>
+        <p class="lyric-line">Everything stays, but it still changes</p>
+        <p class="lyric-line">Ever so slightly, daily and nightly</p>
+        <p class="lyric-line">In little ways, when everything stays</p>
     </div>
 
     <!-- Splash Screen -->
     <div id="splash-screen">
-        <h1>to my dearest august</h1>
+        <h1>To my Dearest August</h1>
     </div>
 
     <!-- Main Content -->
@@ -300,9 +290,7 @@
         <h1 id="main-greeting">Happy 8th! pick a flower!</h1>
         <div id="flower-garden">
             
-            <div class="flower-container" data-entry-type="prose"
-                 data-title="In Awe of you" 
-                 data-letter="I keep replaying what you told me, how you stepped on the scale and saw a number smaller than what you expected. You sounded so surprised, like it couldn’t be real. And it hurt a little, hearing that disbelief in your voice. Because I know it’s not just the mirror that’s made you doubt yourself. It’s the years of words you never deserved to hear. The way your mom would pick apart the body that was just trying to exist, just trying to be.
+            <div class="flower-container" data-entry-type="prose" data-title="In Awe of you" data-letter="I keep replaying what you told me, how you stepped on the scale and saw a number smaller than what you expected. You sounded so surprised, like it couldn’t be real. And it hurt a little, hearing that disbelief in your voice. Because I know it’s not just the mirror that’s made you doubt yourself. It’s the years of words you never deserved to hear. The way your mom would pick apart the body that was just trying to exist, just trying to be.
 
 I wish I could take all of that away from you. I wish I could stand in front of every mirror and make it show you what I see, the truth. Because when I think of you, there’s nothing to fix, nothing to lessen, nothing to compare. You’re everything. You’re softness and strength and warmth all at once. You are the body that holds the person I love most in this world, and that alone makes it sacred to me.
 
@@ -316,9 +304,7 @@ If you ever doubt again, love, remember this: the body you’ve been taught to q
                 <img src="https://i.ibb.co/tMzQcvz9/orchid.png" alt="orchid">
             </div>
 
-            <div class="flower-container" data-entry-type="prose"
-                 data-title="Loved by you"
-                 data-letter="I’ve been thinking about what you said that night. About the what-ifs. About how things might’ve gone if I never confessed. You already know what I meant when I said what I said. But this isn’t about explaining anymore. It’s about how it all felt.
+            <div class="flower-container" data-entry-type="prose" data-title="Loved by you" data-letter="I’ve been thinking about what you said that night. About the what-ifs. About how things might’ve gone if I never confessed. You already know what I meant when I said what I said. But this isn’t about explaining anymore. It’s about how it all felt.
 
 For the longest time, I kept my feelings buried under the thought that you were someone I could never have. You were my friend, someone I wanted so badly that even the idea of losing you terrified me. So I learned to be quiet. I learned to love you from the edges of our friendship, in small ways, in patience, in silence.
 
@@ -332,9 +318,7 @@ Even now, I still feel that quiet awe every time I think about it. You could’v
                 <img src="https://i.ibb.co/k2fXmM0w/lily.png" alt="lily">
             </div>
 
-            <div class="flower-container" data-entry-type="prose"
-                 data-title="Breakfast"
-                 data-letter="I woke up in your house that morning to the sound of you moving, soft footsteps, the clinking of dishes, water running somewhere in the house. You were already up, doing your chores.
+            <div class="flower-container" data-entry-type="prose" data-title="Breakfast" data-letter="I woke up in your house that morning to the sound of you moving, soft footsteps, the clinking of dishes, water running somewhere in the house. You were already up, doing your chores.
 
 I stayed in bed for a while, listening. The smell of coffee drifted in from the table, sunlight slipping through the curtains and warming the space. It felt good to be back, surrounded by the place that somehow feels like you.
 
@@ -350,9 +334,7 @@ At one point, I came up behind you and wrapped my arms around you. You leaned ba
                 <img src="https://i.ibb.co/93w0RvwC/daisy.png" alt="daisy">
             </div>
 
-            <div class="flower-container" data-entry-type="poem"
-                 data-title="Resonance"
-                 data-letter="The day weighs heavy, my thoughts run wild,
+            <div class="flower-container" data-entry-type="poem" data-title="Resonance" data-letter="The day weighs heavy, my thoughts run wild,
 each hour blurs, the world feels piled.
 But then I hear your voice, just once,
 and everything slows down at once.
@@ -384,9 +366,7 @@ your voice still finds and heals my heart.">
                 <img src="https://i.ibb.co/cKPw9cs3/poppy.png" alt="poppy">
             </div>
 
-            <div class="flower-container" data-entry-type="poem"
-                 data-title="Come into my Arms"
-                 data-letter="You chase the day until it breaks,
+            <div class="flower-container" data-entry-type="poem" data-title="Come into my Arms" data-letter="You chase the day until it breaks,
 burning bright on borrowed flame.
 But love, even fire needs a place to sleep
 so rest your storm,
@@ -398,9 +378,9 @@ and come into my arms.">
 
     <!-- Modal for Letters -->
     <div id="letter-modal" class="modal">
-        <div class="envelope">
-            <div class="envelope-flap"></div>
-            <div class="letter">
+        <div class="book">
+            <div class="book-cover"></div>
+            <div class="book-page">
                 <span class="close-button">&times;</span>
                 <h2 id="letter-title"></h2>
                 <p id="letter-body"></p>
@@ -423,19 +403,16 @@ and come into my arms.">
             let firstLetterRead = false;
             let defaultGreeting = "Happy 8th! pick a flower!";
 
-            // --- Initial Animation ---
             setTimeout(() => {
                 splashScreen.style.display = 'none';
                 mainContent.style.display = 'flex';
             }, 4000); 
 
-            // --- Flower Interaction ---
             flowers.forEach(flower => {
                 flower.addEventListener('mouseover', () => {
-                    const title = flower.dataset.title;
                     mainGreeting.style.opacity = '0';
                     setTimeout(() => {
-                        mainGreeting.textContent = title;
+                        mainGreeting.textContent = flower.dataset.title;
                         mainGreeting.style.opacity = '1';
                     }, 300);
                 });
@@ -448,47 +425,39 @@ and come into my arms.">
                     }, 300);
                 });
 
-                flower.addEventListener('click', () => {
-                    // 1. Add bounce animation
-                    flower.classList.add('bouncing');
+                flower.addEventListener('click', (e) => {
+                    const clickedFlower = e.currentTarget;
+                    clickedFlower.classList.add('bouncing');
                     
-                    // 2. Wait for bounce to finish, then open letter
                     setTimeout(() => {
-                        const title = flower.dataset.title;
-                        const letter = flower.dataset.letter;
-                        const entryType = flower.dataset.entryType;
+                        const { title, letter, entryType } = clickedFlower.dataset;
 
-                        // Set content and alignment
                         modalTitle.textContent = title;
                         modalBody.textContent = letter;
                         modalBody.className = (entryType === 'poem') ? 'centered' : 'justified';
                         
-                        // Open modal with animation
                         modal.style.display = 'flex';
-                        setTimeout(() => modal.classList.add('open'), 10); // Allow display change before adding class
+                        setTimeout(() => modal.classList.add('open'), 10);
 
                         if (!firstLetterRead) {
                             firstLetterRead = true;
                             defaultGreeting = "what will you pick next?";
                         }
-
-                        // Remove bounce class after it's done
-                        flower.classList.remove('bouncing');
-                    }, 600); // Must match bounce animation duration
+                        
+                        // Keep animation class for its full duration
+                        setTimeout(() => clickedFlower.classList.remove('bouncing'), 2000);
+                    }, 2000); // Wait 2s for bounce to finish before opening modal
                 });
             });
 
-            // --- Modal Controls ---
             const closeModal = () => {
                 modal.classList.remove('open');
-                // Wait for animation to finish before hiding
-                setTimeout(() => modal.style.display = 'none', 700);
+                setTimeout(() => modal.style.display = 'none', 1200); // Wait for page turn animation
             };
 
             closeButton.addEventListener('click', closeModal);
 
             modal.addEventListener('click', (event) => {
-                // Close if clicking on the backdrop, not the envelope itself
                 if (event.target === modal) {
                     closeModal();
                 }

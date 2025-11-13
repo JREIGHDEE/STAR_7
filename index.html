@@ -229,12 +229,16 @@
         
         #letter-body.justified { text-align: justify; }
         
-        /* --- UPDATED --- This now uses flexbox for robust centering */
         #letter-body.centered { 
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center; 
+        }
+
+        /* --- FIX FOR POEM CENTERING --- */
+        #letter-body.centered p {
+            display: inline-block;
         }
 
         /* --- Styles for "Come into my Arms" Entry --- */
@@ -478,12 +482,14 @@ your voice still finds and heals my heart.">
 
             const closeModal = () => {
                 modal.classList.remove('open'); // Trigger the closing animation
+                
                 // Stop YouTube video from playing in the background
                 const iframe = modal.querySelector('iframe');
                 if (iframe) {
                     const iframeSrc = iframe.src;
                     iframe.src = iframeSrc; // This reloads the iframe, stopping the video
                 }
+
                 // Wait for animation to finish before hiding it completely
                 setTimeout(() => {
                     modal.style.display = 'none'; 

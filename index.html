@@ -146,19 +146,6 @@
             transition: transform 0.3s ease;
         }
 
-        .flower-container.bouncing {
-            animation: happy-bounce 2s ease-in-out;
-            pointer-events: none; /* IMPORTANT: Prevents clicks while bouncing */
-        }
-        
-        @keyframes happy-bounce {
-            0%, 100% { transform: translateY(0) scale(1); }
-            10%, 30%, 50%, 70% { transform: translateY(-30px) scale(1.1); }
-            20%, 40%, 60% { transform: translateY(0) scale(1); }
-            80% { transform: translateY(-15px) scale(1.05); }
-            90% { transform: translateY(0) scale(1); }
-        }
-
         .flower-container:hover {
             transform: scale(1.15) translateY(-10px);
             animation-play-state: paused;
@@ -388,7 +375,6 @@ and come into my arms.">
 
             flowers.forEach(flower => {
                 flower.addEventListener('mouseover', () => {
-                    if (flower.classList.contains('bouncing')) return;
                     mainGreeting.style.opacity = '0';
                     setTimeout(() => {
                         mainGreeting.textContent = flower.dataset.title;
@@ -406,31 +392,21 @@ and come into my arms.">
 
                 flower.addEventListener('click', (e) => {
                     const clickedFlower = e.currentTarget;
-                    if (clickedFlower.classList.contains('bouncing')) return;
-
-                    clickedFlower.classList.add('bouncing');
+                    const { title, letter, entryType } = clickedFlower.dataset;
                     
+                    modalTitle.textContent = title;
+                    modalBody.textContent = letter;
+                    modalBody.className = (entryType === 'poem') ? 'centered' : 'justified';
+                    
+                    modal.style.display = 'block'; // Make it part of the layout
                     setTimeout(() => {
-                        const { title, letter, entryType } = clickedFlower.dataset;
-                        modalTitle.textContent = title;
-                        modalBody.textContent = letter;
-                        modalBody.className = (entryType === 'poem') ? 'centered' : 'justified';
-                        
-                        modal.style.display = 'block'; // Make it part of the layout
-                        setTimeout(() => {
-                           modal.classList.add('open'); // Trigger the animation
-                        }, 10); // A tiny delay ensures the transition triggers
+                        modal.classList.add('open'); // Trigger the opening animation
+                    }, 10); // A tiny delay ensures the transition triggers correctly
 
-                        if (!firstLetterRead) {
-                            firstLetterRead = true;
-                            defaultGreeting = "what will you pick next?";
-                        }
-                    }, 2000);
-
-                    // Remove class after animation finishes
-                    setTimeout(() => {
-                        clickedFlower.classList.remove('bouncing');
-                    }, 2000);
+                    if (!firstLetterRead) {
+                        firstLetterRead = true;
+                        defaultGreeting = "what will you pick next?";
+                    }
                 });
             });
 

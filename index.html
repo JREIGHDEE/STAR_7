@@ -58,7 +58,7 @@
             color: #333; /* Dark color for clarity */
             opacity: 0;
             text-align: center;
-            text-shadow: 0 0 5px rgba(255,255,255,0.5); /* Adjusted for less blur */
+            text-shadow: 0 0 10px rgba(255,255,255,0.7);
             animation: fadeInOutLyric 48s linear infinite;
         }
 
@@ -145,10 +145,10 @@
             animation: float 6s ease-in-out infinite;
             transition: transform 0.3s ease;
         }
-        
+
         .flower-container.bouncing {
             animation: happy-bounce 2s ease-in-out;
-            pointer-events: none;
+            pointer-events: none; /* IMPORTANT: Prevents clicks while bouncing */
         }
         
         @keyframes happy-bounce {
@@ -182,21 +182,20 @@
 
         /* --- MODAL / SIMPLE WHITE PAGE STYLING --- */
         .modal {
-            display: none;
+            display: none; /* Hidden by default */
             position: fixed;
             z-index: 1000;
             left: 0; top: 0;
             width: 100%; height: 100%;
             background-color: #fff;
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+            opacity: 0; /* Start invisible */
+            transform: scale(0.95); /* Start slightly smaller */
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* Animation */
         }
-        
+
         .modal.open {
-            display: block;
-            opacity: 1;
-            transform: scale(1);
+            opacity: 1; /* Fade in */
+            transform: scale(1); /* Scale to normal size */
         }
 
         .page-content {
@@ -417,8 +416,10 @@ and come into my arms.">
                         modalBody.textContent = letter;
                         modalBody.className = (entryType === 'poem') ? 'centered' : 'justified';
                         
-                        modal.style.display = 'block';
-                        setTimeout(() => modal.classList.add('open'), 10);
+                        modal.style.display = 'block'; // Make it part of the layout
+                        setTimeout(() => {
+                           modal.classList.add('open'); // Trigger the animation
+                        }, 10); // A tiny delay ensures the transition triggers
 
                         if (!firstLetterRead) {
                             firstLetterRead = true;
@@ -426,6 +427,7 @@ and come into my arms.">
                         }
                     }, 2000);
 
+                    // Remove class after animation finishes
                     setTimeout(() => {
                         clickedFlower.classList.remove('bouncing');
                     }, 2000);
@@ -433,10 +435,11 @@ and come into my arms.">
             });
 
             const closeModal = () => {
-                modal.classList.remove('open');
+                modal.classList.remove('open'); // Trigger the closing animation
+                // Wait for animation to finish before hiding it completely
                 setTimeout(() => {
-                    modal.style.display = 'none';
-                }, 400); 
+                    modal.style.display = 'none'; 
+                }, 400); // This duration must match the CSS transition duration
             };
 
             closeButton.addEventListener('click', closeModal);

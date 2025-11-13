@@ -4,23 +4,196 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy 8th!</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- General Styling --- */
+        body {
+            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f4f1f7;
+            background-image: linear-gradient(to bottom, #e6e9f0 0%, #eef1f5 100%);
+            overflow: hidden;
+            color: #3e3a4e;
+        }
+
+        /* --- Splash Screen Styling --- */
+        #splash-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background-color: #f4f1f7;
+        }
+
+        #splash-screen h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 500;
+            color: #6a677a;
+            opacity: 0; /* Start hidden */
+            animation: fadeInOut 4s ease-in-out forwards;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            50% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        /* --- Main Content Styling --- */
+        #main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100%;
+            opacity: 0;
+            animation: fadeIn 2s 4s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        #main-greeting {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 50px;
+            transition: opacity 0.3s ease;
+        }
+
+        /* --- Flower Garden Styling --- */
+        #flower-garden {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 20px;
+            flex-wrap: wrap;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .flower-container {
+            cursor: pointer;
+            text-align: center;
+            animation: float 6s ease-in-out infinite;
+            transition: transform 0.3s ease;
+        }
+
+        .flower-container:hover {
+            transform: scale(1.15) translateY(-10px); /* Enhanced hover effect */
+            animation-play-state: paused; /* Pause floating on hover */
+        }
+
+        .flower-container img {
+            width: 150px;
+            height: auto;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        /* Stagger the floating animation for a natural look */
+        .flower-container:nth-child(2) { animation-delay: -2s; }
+        .flower-container:nth-child(3) { animation-delay: -4s; }
+        .flower-container:nth-child(4) { animation-delay: -1.5s; }
+        .flower-container:nth-child(5) { animation-delay: -3s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- Modal Styling --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            animation: fadeInModal 0.5s ease;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            animation: slideIn 0.5s ease;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #letter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #555263;
+        }
+
+        #letter-body {
+            white-space: pre-wrap; /* Preserves formatting of the letter text */
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #3e3a4e;
+        }
+    </style>
 </head>
 <body>
 
     <!-- Initial Greeting Animation -->
     <div id="splash-screen">
-        <h1 class="fade-in-out">to my dearest august</h1>
+        <h1>to my dearest august</h1>
     </div>
 
     <!-- Main Content -->
     <main id="main-content" style="display: none;">
         <h1 id="main-greeting">Happy 8th! pick a flower!</h1>
         <div id="flower-garden">
-            <!-- Flower 1: Orchid -->
+            
+            <!-- Flower 1: Orchid for "In Awe of You" (Represents rare, delicate beauty and strength) -->
             <div class="flower-container" 
                  data-title="In Awe of you" 
                  data-letter="I keep replaying what you told me, how you stepped on the scale and saw a number smaller than what you expected. You sounded so surprised, like it couldn’t be real. And it hurt a little, hearing that disbelief in your voice. Because I know it’s not just the mirror that’s made you doubt yourself. It’s the years of words you never deserved to hear. The way your mom would pick apart the body that was just trying to exist, just trying to be.
@@ -37,7 +210,7 @@ If you ever doubt again, love, remember this: the body you’ve been taught to q
                 <img src="https://i.ibb.co/bF9N7rM/orchid.png" alt="Orchid">
             </div>
 
-            <!-- Flower 2: Peony -->
+            <!-- Flower 2: Peony for "Loved by You" (Represents romance, prosperity, and a happy life together) -->
             <div class="flower-container" 
                  data-title="Loved by you"
                  data-letter="I’ve been thinking about what you said that night. About the what-ifs. About how things might’ve gone if I never confessed. You already know what I meant when I said what I said. But this isn’t about explaining anymore. It’s about how it all felt.
@@ -54,7 +227,7 @@ Even now, I still feel that quiet awe every time I think about it. You could’v
                 <img src="https://i.ibb.co/hH4N43S/peony.png" alt="Peony">
             </div>
 
-            <!-- Flower 3: Daisy -->
+            <!-- Flower 3: Daisy for "Breakfast" (Represents innocence, purity, and simple joys) -->
             <div class="flower-container" 
                  data-title="Breakfast"
                  data-letter="I woke up in your house that morning to the sound of you moving, soft footsteps, the clinking of dishes, water running somewhere in the house. You were already up, doing your chores.
@@ -73,7 +246,7 @@ At one point, I came up behind you and wrapped my arms around you. You leaned ba
                 <img src="https://i.ibb.co/Ssvk0k9/daisy.png" alt="Daisy">
             </div>
 
-            <!-- Flower 4: Lavender -->
+            <!-- Flower 4: Lavender for "Resonance" (Represents calmness, serenity, and devotion) -->
             <div class="flower-container" 
                  data-title="Resonance"
                  data-letter="The day weighs heavy, my thoughts run wild,
@@ -108,7 +281,7 @@ your voice still finds and heals my heart.">
                 <img src="https://i.ibb.co/tLWz9qZ/lavender.png" alt="Lavender">
             </div>
 
-            <!-- Flower 5: Rose -->
+            <!-- Flower 5: Rose for "Come into my Arms" (Represents deep love, passion, and comfort) -->
             <div class="flower-container" 
                  data-title="Come into my Arms"
                  data-letter="You chase the day until it breaks,
@@ -130,6 +303,79 @@ and come into my arms.">
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const splashScreen = document.getElementById('splash-screen');
+            const mainContent = document.getElementById('main-content');
+            const mainGreeting = document.getElementById('main-greeting');
+            const flowers = document.querySelectorAll('.flower-container');
+            const modal = document.getElementById('letter-modal');
+            const modalTitle = document.getElementById('letter-title');
+            const modalBody = document.getElementById('letter-body');
+            const closeButton = document.querySelector('.close-button');
+
+            let firstLetterRead = false;
+            let defaultGreeting = "Happy 8th! pick a flower!";
+
+            // --- Initial Animation ---
+            setTimeout(() => {
+                splashScreen.style.display = 'none';
+                mainContent.style.display = 'flex';
+            }, 4000); // This should match the CSS animation duration
+
+            // --- Flower Interaction ---
+            flowers.forEach(flower => {
+                // Show entry title on hover
+                flower.addEventListener('mouseover', () => {
+                    const title = flower.getAttribute('data-title');
+                    mainGreeting.style.opacity = '0';
+                    setTimeout(() => {
+                        mainGreeting.textContent = title;
+                        mainGreeting.style.opacity = '1';
+                    }, 300);
+                });
+
+                // Return to default greeting on mouse out
+                flower.addEventListener('mouseout', () => {
+                    mainGreeting.style.opacity = '0';
+                    setTimeout(() => {
+                        mainGreeting.textContent = defaultGreeting;
+                        mainGreeting.style.opacity = '1';
+                    }, 300);
+                });
+
+                // Open letter on click
+                flower.addEventListener('click', () => {
+                    const title = flower.getAttribute('data-title');
+                    const letter = flower.getAttribute('data-letter');
+                    
+                    modalTitle.textContent = title;
+                    modalBody.textContent = letter;
+                    modal.style.display = 'block';
+
+                    // Change the default greeting after the first read
+                    if (!firstLetterRead) {
+                        firstLetterRead = true;
+                        defaultGreeting = "what will you pick next?";
+                    }
+                });
+            });
+
+            // --- Modal Controls ---
+            const closeModal = () => {
+                modal.style.display = 'none';
+            };
+
+            closeButton.addEventListener('click', closeModal);
+
+            // Close modal if user clicks outside of the content area
+            window.addEventListener('click', (event) => {
+                if (event.target == modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
 </body>
 </html>

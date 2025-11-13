@@ -34,8 +34,7 @@
         #lyrics-container {
             position: fixed;
             left: 50%;
-            /* Initial centered position */
-            top: 50%;
+            top: 50%; /* Initial centered position */
             transform: translate(-50%, -50%);
             width: 80vw;
             height: 100px;
@@ -45,13 +44,11 @@
             align-items: center;
             pointer-events: none;
             user-select: none;
-            /* Animation for moving to the bottom */
-            transition: top 2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: top 2s cubic-bezier(0.4, 0, 0.2, 1); /* Animation for moving */
         }
 
-        /* State for when lyrics are at the bottom */
         #lyrics-container.moved-down {
-            top: 92%; /* Position near the bottom */
+            top: 90%; /* Final position at the bottom */
         }
 
         .lyric-line {
@@ -61,6 +58,7 @@
             color: #000;
             opacity: 0;
             text-align: center;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
             animation: fadeInOutLyric 48s linear infinite;
         }
 
@@ -111,21 +109,14 @@
             justify-content: center;
             height: 100vh; width: 100%;
             opacity: 0;
-            /* Gentle fade in animation */
             animation: gentleFadeIn 2.5s 4s forwards;
             background-color: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(2px);
         }
 
         @keyframes gentleFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         #main-greeting {
@@ -157,6 +148,7 @@
 
         .flower-container.bouncing {
             animation: happy-bounce 2s ease-in-out;
+            pointer-events: none; /* Disable clicks while bouncing */
         }
         
         @keyframes happy-bounce {
@@ -188,59 +180,39 @@
             50% { transform: translateY(-15px); }
         }
 
-        /* --- MODAL / PAGE STYLING --- */
+        /* --- MODAL / SIMPLE WHITE PAGE STYLING --- */
         .modal {
             display: none;
             position: fixed;
             z-index: 1000;
             left: 0; top: 0;
             width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .book {
-            width: 90vw;
-            max-width: 700px;
-            height: 70vh;
-            max-height: 500px;
-            position: relative;
-            perspective: 1500px;
-        }
-
-        .book-page {
-            position: absolute;
-            width: 100%; height: 100%;
-            background-color: #fdfaf3;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border-radius: 6px;
-            padding: 40px;
-            box-sizing: border-box;
-            overflow-y: auto;
+            background-color: #fff;
+            opacity: 0;
+            transition: opacity 0.8s ease;
         }
         
-        .book-cover {
-            position: absolute;
-            width: 100%; height: 100%;
-            background-color: #e9decb;
-            border-radius: 6px;
-            transform-origin: left;
-            transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-            z-index: 1;
+        .modal.open {
+            opacity: 1;
         }
 
-        .modal.open .book-cover {
-            transform: rotateY(-180deg);
+        .page-content {
+            width: 90%;
+            max-width: 700px;
+            height: 100%;
+            margin: 0 auto;
+            padding: 5vh 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            position: relative;
         }
 
         .close-button {
-            position: absolute;
-            top: 15px; right: 25px;
-            font-size: 32px;
+            position: fixed;
+            top: 20px; right: 30px;
+            font-size: 40px;
             font-weight: bold;
-            color: #aaa;
+            color: #ccc;
             cursor: pointer;
             z-index: 10;
             transition: transform 0.2s, color 0.2s;
@@ -253,21 +225,18 @@
 
         #letter-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            margin-top: 0; margin-bottom: 20px;
+            font-size: 2.5rem;
+            margin-top: 0; margin-bottom: 25px;
             color: #555263;
         }
 
         #letter-body {
             white-space: pre-wrap;
-            font-size: 1rem;
+            font-size: 1.1rem;
             line-height: 1.8;
             color: #3e3a4e;
-            opacity: 0;
-            transition: opacity 0.5s 0.8s;
         }
         
-        .modal.open #letter-body { opacity: 1; }
         #letter-body.justified { text-align: justify; }
         #letter-body.centered { text-align: center; }
 
@@ -384,15 +353,12 @@ and come into my arms.">
         </div>
     </main>
 
-    <!-- Modal for Letters -->
+    <!-- Modal / Simple White Page -->
     <div id="letter-modal" class="modal">
-        <div class="book">
-            <div class="book-cover"></div>
-            <div class="book-page">
-                <span class="close-button">&times;</span>
-                <h2 id="letter-title"></h2>
-                <p id="letter-body"></p>
-            </div>
+        <div class="page-content">
+            <span class="close-button">&times;</span>
+            <h2 id="letter-title"></h2>
+            <p id="letter-body"></p>
         </div>
     </div>
 
@@ -412,16 +378,15 @@ and come into my arms.">
             let firstLetterRead = false;
             let defaultGreeting = "Happy 8th! pick a flower!";
 
-            // This timer controls the entire opening sequence
             setTimeout(() => {
                 splashScreen.style.display = 'none';
                 mainContent.style.display = 'flex';
-                // Trigger the animation to move lyrics down
                 lyricsContainer.classList.add('moved-down');
             }, 4000); 
 
             flowers.forEach(flower => {
                 flower.addEventListener('mouseover', () => {
+                    if (flower.classList.contains('bouncing')) return;
                     mainGreeting.style.opacity = '0';
                     setTimeout(() => {
                         mainGreeting.textContent = flower.dataset.title;
@@ -439,46 +404,35 @@ and come into my arms.">
 
                 flower.addEventListener('click', (e) => {
                     const clickedFlower = e.currentTarget;
-                    
-                    // Prevent another click while bouncing
                     if (clickedFlower.classList.contains('bouncing')) return;
 
                     clickedFlower.classList.add('bouncing');
                     
                     setTimeout(() => {
                         const { title, letter, entryType } = clickedFlower.dataset;
-
                         modalTitle.textContent = title;
                         modalBody.textContent = letter;
                         modalBody.className = (entryType === 'poem') ? 'centered' : 'justified';
                         
-                        modal.style.display = 'flex';
+                        modal.style.display = 'block';
                         setTimeout(() => modal.classList.add('open'), 10);
 
                         if (!firstLetterRead) {
                             firstLetterRead = true;
                             defaultGreeting = "what will you pick next?";
                         }
-                        
-                    }, 2000); // Wait for bounce animation to mostly finish
+                    }, 2000);
 
-                    // Remove class after animation is done
                     setTimeout(() => clickedFlower.classList.remove('bouncing'), 2000);
                 });
             });
 
             const closeModal = () => {
                 modal.classList.remove('open');
-                setTimeout(() => modal.style.display = 'none', 1200);
+                setTimeout(() => modal.style.display = 'none', 800); // Match CSS transition
             };
 
             closeButton.addEventListener('click', closeModal);
-
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    closeModal();
-                }
-            });
         });
     </script>
 </body>

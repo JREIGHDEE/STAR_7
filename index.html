@@ -33,16 +33,25 @@
         /* --- Fading Lyrics Styling --- */
         #lyrics-container {
             position: fixed;
-            top: 50%; left: 50%;
+            left: 50%;
+            /* Initial centered position */
+            top: 50%;
             transform: translate(-50%, -50%);
             width: 80vw;
-            height: 100px; /* Area for one line to appear */
+            height: 100px;
             z-index: -1;
             display: flex;
             justify-content: center;
             align-items: center;
             pointer-events: none;
             user-select: none;
+            /* Animation for moving to the bottom */
+            transition: top 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* State for when lyrics are at the bottom */
+        #lyrics-container.moved-down {
+            top: 92%; /* Position near the bottom */
         }
 
         .lyric-line {
@@ -50,19 +59,18 @@
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
             color: #000;
-            opacity: 0; /* Start invisible */
+            opacity: 0;
             text-align: center;
-            animation: fadeInOutLyric 48s linear infinite; /* 8 lines * 6s per line */
+            animation: fadeInOutLyric 48s linear infinite;
         }
 
         @keyframes fadeInOutLyric {
-            0%, 100% { opacity: 0; }
-            2% { opacity: 0.12; } /* Fade In */
-            10.5% { opacity: 0.12; } /* Hold */
-            12.5% { opacity: 0; } /* Fade Out (100% / 8 lines = 12.5% per line) */
+            0%, 100% { opacity: 0; transform: translateY(10px); }
+            2% { opacity: 0.12; transform: translateY(0); } /* Fade In */
+            10.5% { opacity: 0.12; transform: translateY(0); } /* Hold */
+            12.5% { opacity: 0; transform: translateY(-10px); } /* Fade Out */
         }
         
-        /* Stagger the animation for each line */
         .lyric-line:nth-child(1) { animation-delay: 0s; }
         .lyric-line:nth-child(2) { animation-delay: 6s; }
         .lyric-line:nth-child(3) { animation-delay: 12s; }
@@ -71,7 +79,6 @@
         .lyric-line:nth-child(6) { animation-delay: 30s; }
         .lyric-line:nth-child(7) { animation-delay: 36s; }
         .lyric-line:nth-child(8) { animation-delay: 42s; }
-
 
         /* --- Splash Screen Styling --- */
         #splash-screen {
@@ -104,12 +111,22 @@
             justify-content: center;
             height: 100vh; width: 100%;
             opacity: 0;
-            animation: fadeIn 2s 4s forwards;
+            /* Gentle fade in animation */
+            animation: gentleFadeIn 2.5s 4s forwards;
             background-color: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(2px);
         }
 
-        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes gentleFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         #main-greeting {
             font-family: 'Playfair Display', serif;
@@ -195,13 +212,10 @@
 
         .book-page {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background-color: #fdfaf3;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             border-radius: 6px;
-            
-            /* Page Content */
             padding: 40px;
             box-sizing: border-box;
             overflow-y: auto;
@@ -209,8 +223,7 @@
         
         .book-cover {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             background-color: #e9decb;
             border-radius: 6px;
             transform-origin: left;
@@ -224,8 +237,7 @@
 
         .close-button {
             position: absolute;
-            top: 15px;
-            right: 25px;
+            top: 15px; right: 25px;
             font-size: 32px;
             font-weight: bold;
             color: #aaa;
@@ -242,8 +254,7 @@
         #letter-title {
             font-family: 'Playfair Display', serif;
             font-size: 2rem;
-            margin-top: 0;
-            margin-bottom: 20px;
+            margin-top: 0; margin-bottom: 20px;
             color: #555263;
         }
 
@@ -252,14 +263,11 @@
             font-size: 1rem;
             line-height: 1.8;
             color: #3e3a4e;
-            opacity: 0; /* Start hidden */
-            transition: opacity 0.5s 0.8s; /* Fade in after page turns */
+            opacity: 0;
+            transition: opacity 0.5s 0.8s;
         }
         
-        .modal.open #letter-body {
-            opacity: 1;
-        }
-
+        .modal.open #letter-body { opacity: 1; }
         #letter-body.justified { text-align: justify; }
         #letter-body.centered { text-align: center; }
 
@@ -393,6 +401,7 @@ and come into my arms.">
 
             const splashScreen = document.getElementById('splash-screen');
             const mainContent = document.getElementById('main-content');
+            const lyricsContainer = document.getElementById('lyrics-container');
             const mainGreeting = document.getElementById('main-greeting');
             const flowers = document.querySelectorAll('.flower-container');
             const modal = document.getElementById('letter-modal');
@@ -403,9 +412,12 @@ and come into my arms.">
             let firstLetterRead = false;
             let defaultGreeting = "Happy 8th! pick a flower!";
 
+            // This timer controls the entire opening sequence
             setTimeout(() => {
                 splashScreen.style.display = 'none';
                 mainContent.style.display = 'flex';
+                // Trigger the animation to move lyrics down
+                lyricsContainer.classList.add('moved-down');
             }, 4000); 
 
             flowers.forEach(flower => {
@@ -427,6 +439,10 @@ and come into my arms.">
 
                 flower.addEventListener('click', (e) => {
                     const clickedFlower = e.currentTarget;
+                    
+                    // Prevent another click while bouncing
+                    if (clickedFlower.classList.contains('bouncing')) return;
+
                     clickedFlower.classList.add('bouncing');
                     
                     setTimeout(() => {
@@ -444,15 +460,16 @@ and come into my arms.">
                             defaultGreeting = "what will you pick next?";
                         }
                         
-                        // Keep animation class for its full duration
-                        setTimeout(() => clickedFlower.classList.remove('bouncing'), 2000);
-                    }, 2000); // Wait 2s for bounce to finish before opening modal
+                    }, 2000); // Wait for bounce animation to mostly finish
+
+                    // Remove class after animation is done
+                    setTimeout(() => clickedFlower.classList.remove('bouncing'), 2000);
                 });
             });
 
             const closeModal = () => {
                 modal.classList.remove('open');
-                setTimeout(() => modal.style.display = 'none', 1200); // Wait for page turn animation
+                setTimeout(() => modal.style.display = 'none', 1200);
             };
 
             closeButton.addEventListener('click', closeModal);

@@ -44,7 +44,7 @@
             align-items: center;
             pointer-events: none;
             user-select: none;
-            transition: top 2s cubic-bezier(0.4, 0, 0.2, 1); /* Animation for moving */
+            transition: top 2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         #lyrics-container.moved-down {
@@ -55,18 +55,18 @@
             position: absolute;
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            color: #000;
+            color: #333; /* Dark color for clarity */
             opacity: 0;
             text-align: center;
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            text-shadow: 0 0 10px rgba(255,255,255,0.7);
             animation: fadeInOutLyric 48s linear infinite;
         }
 
         @keyframes fadeInOutLyric {
-            0%, 100% { opacity: 0; transform: translateY(10px); }
-            2% { opacity: 0.12; transform: translateY(0); } /* Fade In */
-            10.5% { opacity: 0.12; transform: translateY(0); } /* Hold */
-            12.5% { opacity: 0; transform: translateY(-10px); } /* Fade Out */
+            0%, 100% { opacity: 0; }
+            2% { opacity: 1; } /* Fade In to 100% Opacity */
+            10.5% { opacity: 1; } /* Hold at 100% Opacity */
+            12.5% { opacity: 0; } /* Fade Out */
         }
         
         .lyric-line:nth-child(1) { animation-delay: 0s; }
@@ -148,7 +148,7 @@
 
         .flower-container.bouncing {
             animation: happy-bounce 2s ease-in-out;
-            pointer-events: none; /* Disable clicks while bouncing */
+            pointer-events: none; /* IMPORTANT: Prevents clicks while bouncing */
         }
         
         @keyframes happy-bounce {
@@ -182,18 +182,12 @@
 
         /* --- MODAL / SIMPLE WHITE PAGE STYLING --- */
         .modal {
-            display: none;
+            display: none; /* No animation, just display block/none */
             position: fixed;
             z-index: 1000;
             left: 0; top: 0;
             width: 100%; height: 100%;
             background-color: #fff;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-        }
-        
-        .modal.open {
-            opacity: 1;
         }
 
         .page-content {
@@ -414,8 +408,7 @@ and come into my arms.">
                         modalBody.textContent = letter;
                         modalBody.className = (entryType === 'poem') ? 'centered' : 'justified';
                         
-                        modal.style.display = 'block';
-                        setTimeout(() => modal.classList.add('open'), 10);
+                        modal.style.display = 'block'; // Instant display
 
                         if (!firstLetterRead) {
                             firstLetterRead = true;
@@ -423,13 +416,15 @@ and come into my arms.">
                         }
                     }, 2000);
 
-                    setTimeout(() => clickedFlower.classList.remove('bouncing'), 2000);
+                    // Remove class after animation finishes
+                    setTimeout(() => {
+                        clickedFlower.classList.remove('bouncing');
+                    }, 2000);
                 });
             });
 
             const closeModal = () => {
-                modal.classList.remove('open');
-                setTimeout(() => modal.style.display = 'none', 800); // Match CSS transition
+                modal.style.display = 'none'; // Instant close
             };
 
             closeButton.addEventListener('click', closeModal);

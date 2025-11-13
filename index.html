@@ -217,6 +217,7 @@
             font-size: 2.5rem;
             margin-top: 0; margin-bottom: 25px;
             color: #555263;
+            text-align: center; /* Centered title */
         }
 
         #letter-body {
@@ -228,6 +229,38 @@
         
         #letter-body.justified { text-align: justify; }
         #letter-body.centered { text-align: center; }
+
+        /* --- Styles for "Come into my Arms" Entry --- */
+        .entry-image {
+            max-width: 90%;
+            max-height: 40vh;
+            width: auto;
+            height: auto;
+            margin: 20px auto;
+            display: block;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 560px; /* Standard video width */
+            margin: 30px auto;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
 
     </style>
 </head>
@@ -262,7 +295,7 @@ I wish I could take all of that away from you. I wish I could stand in front of 
 
 When I saw you, really saw you, it felt like something holy. Like I was being trusted with a secret no one else deserved to know. My hands still remember the quiet awe of touching you, not out of lust, but out of gratitude, for being allowed to love you like that. Every curve, every scar, every breath, I adored them. I worshipped them. I still do.
 
-I told you that your body reminded me of Athena. The kind of beauty that doesn’t just exist to be looked at, but to be revered. There was power in you, not the kind that shouts, but the kind that hums quietly beneath the surface. I remember thinking how every part of you felt like it was carved by something divine, made exactly as it should be.
+I told you that your body reminded me of Athena.The kind of beauty that doesn’t just exist to be looked at, but to be revered. There was power in you, not the kind that shouts, but the kind that hums quietly beneath the surface. I remember thinking how every part of you felt like it was carved by something divine, made exactly as it should be.
 
 You are the most beautiful thing I have ever laid eyes on, and I don’t mean that lightly. It wasn’t about perfection. It was about presence, the way you existed so completely in that moment. You were divine to me. I would’ve said a prayer if I thought it would do the feeling justice.
 
@@ -284,11 +317,11 @@ Even now, I still feel that quiet awe every time I think about it. You could’v
                 <img src="https://i.ibb.co/k2fXmM0w/lily.png" alt="lily">
             </div>
 
-            <div class="flower-container" data-entry-type="prose" data-title="Breakfast" data-letter="I woke up in your house that morning to the sound of you moving, soft footsteps, the clinking of dishes, water running somewhere in the house. You were already up, doing your chores.
+            <div class="flower-container" data-entry-type="prose" data-title="Breakfast" data-letter="I woke up in your house that morning to the sound of you moving, soft footsteps, the clinking of dishes, water running somewhere in the house. You were already up, doing your chores
 
 I stayed in bed for a while, listening. The smell of coffee drifted in from the table, sunlight slipping through the curtains and warming the space. It felt good to be back, surrounded by the place that somehow feels like you.
 
-You were coming back in assuming you just fed Bentai. Your hair fell around your face in that soft, natural way I love. You looked up and were surprised, apologies for scaring you. and after that you smiled. You just looked beautiful in the morning light.
+You were coming back in assuming you just fed bentai (not sure if this is the correct spelling hehe) Your hair fell around your face in that soft, natural way I love. You looked up and was surprised, apologies for scaring you. and after that you smiled. You just looked beautiful in the morning light.
 
 After a bit, we started cooking together. You cut the ingredients for your signature beef loaf dish while I set up the small pot and portable stove. We fell into that rhythm again. You chopped, I stirred. You poured coffee, I tended the stove. When you were done, I cleaned up. It moved smoothly, like we knew exactly where each of us belonged.
 
@@ -332,11 +365,28 @@ your voice still finds and heals my heart.">
                 <img src="https://i.ibb.co/cKPw9cs3/poppy.png" alt="poppy">
             </div>
 
-            <div class="flower-container" data-entry-type="poem" data-title="Come into my Arms" data-letter="You chase the day until it breaks,
-burning bright on borrowed flame.
-But love, even fire needs a place to sleep
-so rest your storm,
-and come into my arms.">
+            <!-- 
+                SPECIAL ENTRY FOR "Come into my Arms"
+                The 'data-letter' for this entry contains HTML.
+                The JavaScript will use .innerHTML to render it.
+            -->
+            <div class="flower-container" 
+                 data-entry-type="poem" 
+                 data-title="Come into my Arms" 
+                 data-letter='
+                    <!-- REPLACE THIS with your image link -->
+                    <img src="https://i.imgur.com/example.jpeg" alt="A special moment" class="entry-image">
+                    
+                    <p>You chase the day until it breaks,<br>
+                    burning bright on borrowed flame.<br>
+                    But love, even fire needs a place to sleep<br>
+                    so rest your storm,<br>
+                    and come into my arms.</p>
+                    
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/zM9I8bqNI1E?si=txyiHOKJnsvbl53k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                 '>
                 <img src="https://i.ibb.co/m53T5D8C/dandelion.png" alt="dandelion">
             </div>
         </div>
@@ -347,7 +397,7 @@ and come into my arms.">
         <div class="page-content">
             <span class="close-button">&times;</span>
             <h2 id="letter-title"></h2>
-            <p id="letter-body"></p>
+            <div id="letter-body"></div> <!-- Changed to a div for innerHTML -->
         </div>
     </div>
 
@@ -395,7 +445,16 @@ and come into my arms.">
                     const { title, letter, entryType } = clickedFlower.dataset;
                     
                     modalTitle.textContent = title;
-                    modalBody.textContent = letter;
+                    
+                    // Use innerHTML for the special case, textContent for others for safety
+                    if (title === "Come into my Arms") {
+                        modalBody.innerHTML = letter;
+                    } else {
+                        modalBody.innerHTML = ''; // Clear previous HTML content
+                        modalBody.textContent = letter; // Safely set text content
+                    }
+
+                    // Set alignment class
                     modalBody.className = (entryType === 'poem') ? 'centered' : 'justified';
                     
                     modal.style.display = 'block'; // Make it part of the layout

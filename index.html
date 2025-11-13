@@ -13,10 +13,48 @@
         body {
             margin: 0;
             font-family: 'Quicksand', sans-serif;
-            background-color: #f4f1f7;
-            background-image: linear-gradient(to bottom, #e6e9f0 0%, #eef1f5 100%);
-            overflow: hidden;
             color: #3e3a4e;
+            overflow: hidden; /* Prevent scrollbars from the lyrics */
+        }
+
+        /* --- Garden Background --- */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: url('https://images.unsplash.com/photo-1497211419994-14ae40a31753?auto=format&fit=crop&q=80&w=1887');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px) brightness(1.1); /* Soften and brighten the background */
+            transform: scale(1.1); /* Ensure no hard edges from blur */
+        }
+        
+        /* --- Faint Lyrics in Background --- */
+        #lyrics-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            z-index: -1;
+            
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            line-height: 2.5;
+            color: #000;
+            opacity: 0.06; /* Very faint */
+            
+            pointer-events: none; /* Make it unclickable */
+            user-select: none; /* Make it unselectable */
+            overflow: hidden;
         }
 
         /* --- Splash Screen Styling --- */
@@ -26,7 +64,8 @@
             align-items: center;
             height: 100vh;
             width: 100vw;
-            background-color: #f4f1f7;
+            background-color: rgba(244, 241, 247, 0.7); /* Slightly transparent to see garden */
+            backdrop-filter: blur(5px);
         }
 
         #splash-screen h1 {
@@ -34,7 +73,7 @@
             font-size: 3rem;
             font-weight: 500;
             color: #6a677a;
-            opacity: 0; /* Start hidden */
+            opacity: 0;
             animation: fadeInOut 4s ease-in-out forwards;
         }
 
@@ -46,7 +85,7 @@
 
         /* --- Main Content Styling --- */
         #main-content {
-            display: flex;
+            display: none; /* Hidden until splash screen finishes */
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -54,6 +93,8 @@
             width: 100%;
             opacity: 0;
             animation: fadeIn 2s 4s forwards;
+            background-color: rgba(255, 255, 255, 0.2); /* Subtle overlay to make text pop */
+            backdrop-filter: blur(2px);
         }
 
         @keyframes fadeIn {
@@ -67,6 +108,8 @@
             text-align: center;
             margin-bottom: 50px;
             transition: opacity 0.3s ease;
+            color: #3e3a4e;
+            text-shadow: 0 1px 3px rgba(255,255,255,0.5);
         }
 
         /* --- Flower Garden Styling --- */
@@ -88,17 +131,16 @@
         }
 
         .flower-container:hover {
-            transform: scale(1.15) translateY(-10px); /* Enhanced hover effect */
-            animation-play-state: paused; /* Pause floating on hover */
+            transform: scale(1.15) translateY(-10px);
+            animation-play-state: paused;
         }
 
         .flower-container img {
             width: 150px;
             height: auto;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
         }
 
-        /* Stagger the floating animation for a natural look */
         .flower-container:nth-child(2) { animation-delay: -2s; }
         .flower-container:nth-child(3) { animation-delay: -4s; }
         .flower-container:nth-child(4) { animation-delay: -1.5s; }
@@ -174,7 +216,7 @@
         }
 
         #letter-body {
-            white-space: pre-wrap; /* Preserves formatting of the letter text */
+            white-space: pre-wrap;
             font-size: 1rem;
             line-height: 1.8;
             color: #3e3a4e;
@@ -183,17 +225,31 @@
 </head>
 <body>
 
+    <!-- Background Elements -->
+    <div class="background-container"></div>
+    <div id="lyrics-background">
+        Let's go in the garden<br>
+        You'll find something waiting<br>
+        Right there where you left it lying upside down<br>
+        When you finally find it, you'll see how it's faded<br>
+        The underside is lighter when you turn it around<br>
+        Everything stays right where you left it<br>
+        Everything stays, but it still changes<br>
+        Ever so slightly, daily and nightly<br>
+        In little ways, when everything stays
+    </div>
+
     <!-- Initial Greeting Animation -->
     <div id="splash-screen">
         <h1>to my dearest august</h1>
     </div>
 
     <!-- Main Content -->
-    <main id="main-content" style="display: none;">
+    <main id="main-content">
         <h1 id="main-greeting">Happy 8th! pick a flower!</h1>
         <div id="flower-garden">
             
-            <!-- Flower 1: Orchid for "In Awe of You" (Represents rare, delicate beauty and strength) -->
+            <!-- Flower 1: Orchid for "In Awe of You" -->
             <div class="flower-container" 
                  data-title="In Awe of you" 
                  data-letter="I keep replaying what you told me, how you stepped on the scale and saw a number smaller than what you expected. You sounded so surprised, like it couldn’t be real. And it hurt a little, hearing that disbelief in your voice. Because I know it’s not just the mirror that’s made you doubt yourself. It’s the years of words you never deserved to hear. The way your mom would pick apart the body that was just trying to exist, just trying to be.
@@ -207,10 +263,10 @@ I told you that your body reminded me of Athena. The kind of beauty that doesn�
 You are the most beautiful thing I have ever laid eyes on, and I don’t mean that lightly. It wasn’t about perfection. It was about presence, the way you existed so completely in that moment. You were divine to me. I would’ve said a prayer if I thought it would do the feeling justice.
 
 If you ever doubt again, love, remember this: the body you’ve been taught to question is the same one I see as a masterpiece. You were never too much or too little. You were exactly right. And I will always, always be grateful that I got to love you that way, to see you the way no one else has, to hold you as if I was holding something sacred.">
-                <img src="https://i.ibb.co/bF9N7rM/orchid.png" alt="Orchid">
+                <img src="https://i.ibb.co/tMzQcvz9/orchid.png" alt="orchid">
             </div>
 
-            <!-- Flower 2: Peony for "Loved by You" (Represents romance, prosperity, and a happy life together) -->
+            <!-- Flower 2: Lily for "Loved by You" -->
             <div class="flower-container" 
                  data-title="Loved by you"
                  data-letter="I’ve been thinking about what you said that night. About the what-ifs. About how things might’ve gone if I never confessed. You already know what I meant when I said what I said. But this isn’t about explaining anymore. It’s about how it all felt.
@@ -224,10 +280,10 @@ And now, looking back, I still can’t believe how it all aligned. How one night
 When you said it wasn’t choosing but realizing, something in me just went still. Because I understood it. You were never something I chose either. You were something that happened to me quietly, completely, and without warning. It was never a decision. It was like coming home.
 
 Even now, I still feel that quiet awe every time I think about it. You could’ve been anyone’s story, but somehow, you became mine. And I’ll never stop being grateful for that.">
-                <img src="https://i.ibb.co/hH4N43S/peony.png" alt="Peony">
+                <img src="https://i.ibb.co/k2fXmM0w/lily.png" alt="lily">
             </div>
 
-            <!-- Flower 3: Daisy for "Breakfast" (Represents innocence, purity, and simple joys) -->
+            <!-- Flower 3: Daisy for "Breakfast" -->
             <div class="flower-container" 
                  data-title="Breakfast"
                  data-letter="I woke up in your house that morning to the sound of you moving, soft footsteps, the clinking of dishes, water running somewhere in the house. You were already up, doing your chores.
@@ -243,10 +299,10 @@ The eggs didn’t turn out right, half-fried, half-something else, but we laughe
 Growing up, I watched my father sit while my mother did everything, cooking, cleaning, moving around him while he stayed still. I didn’t notice it then, but I think that’s why mornings like this hit me the way they do. With you, it’s different. I’m not standing aside. I’m part of it. I want to work with you, to share what we do and be present together, even in the smallest things.
 
 At one point, I came up behind you and wrapped my arms around you. You leaned back into me without stopping, letting me kiss your shoulder while your hands stayed on the food. I rested there for a moment, taking it in, the smell and the warmth of you, the rhythm of the kitchen. Then I pressed my lips to your hair, just once, and felt like nothing else mattered. I wanted to stay there forever, holding you, cooking with you, laughing with you, making mornings like this ours, just us together. in my heart I hoped that this routine would continue, for us to be there for one another even in the mundane things, because I never wanted breakfast to last a bit longer than that saturday.">
-                <img src="https://i.ibb.co/Ssvk0k9/daisy.png" alt="Daisy">
+                <img src="https://i.ibb.co/93w0RvwC/daisy.png" alt="daisy">
             </div>
 
-            <!-- Flower 4: Lavender for "Resonance" (Represents calmness, serenity, and devotion) -->
+            <!-- Flower 4: Poppy for "Resonance" -->
             <div class="flower-container" 
                  data-title="Resonance"
                  data-letter="The day weighs heavy, my thoughts run wild,
@@ -278,10 +334,10 @@ Each night you call, it feels the same,
 a gentle spell that speaks my name.
 And though we’re miles and miles apart,
 your voice still finds and heals my heart.">
-                <img src="https://i.ibb.co/tLWz9qZ/lavender.png" alt="Lavender">
+                <img src="https://i.ibb.co/cKPw9cs3/poppy.png" alt="poppy">
             </div>
 
-            <!-- Flower 5: Rose for "Come into my Arms" (Represents deep love, passion, and comfort) -->
+            <!-- Flower 5: Dandelion for "Come into my Arms" -->
             <div class="flower-container" 
                  data-title="Come into my Arms"
                  data-letter="You chase the day until it breaks,
@@ -289,7 +345,7 @@ burning bright on borrowed flame.
 But love, even fire needs a place to sleep
 so rest your storm,
 and come into my arms.">
-                <img src="https://i.ibb.co/Xz22M7x/rose.png" alt="Rose">
+                <img src="https://i.ibb.co/m53T5D8C/dandelion.png" alt="dandelion">
             </div>
         </div>
     </main>
@@ -322,11 +378,10 @@ and come into my arms.">
             setTimeout(() => {
                 splashScreen.style.display = 'none';
                 mainContent.style.display = 'flex';
-            }, 4000); // This should match the CSS animation duration
+            }, 4000); 
 
             // --- Flower Interaction ---
             flowers.forEach(flower => {
-                // Show entry title on hover
                 flower.addEventListener('mouseover', () => {
                     const title = flower.getAttribute('data-title');
                     mainGreeting.style.opacity = '0';
@@ -336,7 +391,6 @@ and come into my arms.">
                     }, 300);
                 });
 
-                // Return to default greeting on mouse out
                 flower.addEventListener('mouseout', () => {
                     mainGreeting.style.opacity = '0';
                     setTimeout(() => {
@@ -345,7 +399,6 @@ and come into my arms.">
                     }, 300);
                 });
 
-                // Open letter on click
                 flower.addEventListener('click', () => {
                     const title = flower.getAttribute('data-title');
                     const letter = flower.getAttribute('data-letter');
@@ -354,7 +407,6 @@ and come into my arms.">
                     modalBody.textContent = letter;
                     modal.style.display = 'block';
 
-                    // Change the default greeting after the first read
                     if (!firstLetterRead) {
                         firstLetterRead = true;
                         defaultGreeting = "what will you pick next?";
@@ -369,7 +421,6 @@ and come into my arms.">
 
             closeButton.addEventListener('click', closeModal);
 
-            // Close modal if user clicks outside of the content area
             window.addEventListener('click', (event) => {
                 if (event.target == modal) {
                     closeModal();
